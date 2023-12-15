@@ -1,0 +1,41 @@
+* {
+    font-family: 'Roboto';
+    transition: all 0.5s;
+}
+h1 {
+    font-size: 20px;
+}
+body {
+    max-width: 460px;
+    margin: auto;
+}
+.form {
+    padding: 30px 20px;
+    margin: 50% 30px;
+    background-color: rgb(244, 244, 255);
+    border-radius: 10px;
+}
+input, select {
+    width: 90px;
+}
+.btn {
+    border: 2px solid #8181FB;
+    margin-top: 30px;
+    padding: 5px 30px;
+    margin-left: 10px;
+    background-color: #8181FB;
+    font-size: 15px;
+    border-radius: 5px;
+    color: white;
+}
+.batal {
+    border: 2px solid #8181FB;
+    margin-top: 30px;
+    padding: 5px 30px;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+a {
+    text-decoration: none;
+    color: #8181FB;
+}

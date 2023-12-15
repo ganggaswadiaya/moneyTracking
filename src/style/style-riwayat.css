@@ -1,0 +1,78 @@
+* {
+    transition: all 0.5s;
+}
+a {
+    text-decoration: none;
+    color: #3f5dcd;
+}
+header {
+    padding-top: 30px;
+}
+.toogle {
+    margin: 0 70px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 10px;
+}
+.pemasukan, .pengeluaran {
+    width: 100%;
+    padding: 10px 20px;
+}
+
+.active {
+    background-color: #3f5dcd;
+    border-radius: 10px;
+}
+.active a {
+    color: white;
+}
+.titleTransaksiTerbaru {
+    margin: 0 30px;
+    margin-bottom: 20px;
+    margin-top: 0;
+    display: flex;
+    justify-content: space-between;
+}
+.titleTransaksiTerbaru h1 {
+    font-size: 20px;
+    color: white;
+}
+main .pemasukanKeluaran {
+    padding: 0 20px;
+    margin-top: -30px;
+    display: flex;
+    justify-content: space-between;
+}
+main .cardPemasukan {
+    width: 45%;
+    padding: 15px 0;
+    padding-left: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+main .titleCardPemasukan {
+    display: flex;
+    gap: 5px;
+}
+
+main .titleCardPemasukan p {
+    font-size: 12px;
+    color: #000000;
+    opacity: 1;
+}
+
+main .titleCardPemasukan img {
+    height: 15px;
+}
+
+main .cardPemasukan .jmlhPemasukan h2 {
+    margin-top: 10px;
+    font-size: 18px;
+    opacity: 1;
+    color: #000000;
+    font-weight: 500;
+}
