@@ -13,7 +13,7 @@
 
 <body>
     <div class="form">
-        <form action="insert-pemasukan.php" method="post">
+        <form action="proses_pengeluaran.php" method="post">
             <h1>Pengeluaran</h1>
             <hr>
             <table border="0" cellpadding="5">

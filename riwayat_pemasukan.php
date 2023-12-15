@@ -35,41 +35,51 @@
 
         include 'koneksi.php';
 
+        // mengurutkan pemasukan sesuai dengan data terbaru
         $query = 'SELECT * FROM tb_pemasukan ORDER BY id_pemasukan DESC';
         $hasil = mysqli_query($conn, $query);
 
+        // mengambil data kategori pada tabel dana
         $query_join = mysqli_query($conn, "SELECT category FROM tb_dana INNER JOIN tb_pemasukan USING(id_dana)");
-        $cek = mysqli_num_rows($query_join);
+        $cek = mysqli_fetch_assoc($query_join);
 
-        while ($data = mysqli_fetch_assoc($hasil)) {
-            $total += $data['penghasilan'];
+        // menjumlahkan semua pemasukan menjadi saldo
+        $query_total_saldo = "SELECT SUM(penghasilan) AS total_saldo FROM tb_pemasukan";
+        $result_total_saldo = mysqli_query($conn, $query_total_saldo);
+        $row_total_saldo = mysqli_fetch_assoc($result_total_saldo);
 
+        // mengambil total pengeluaran untuk di tampilkan
+        $query_total_pengeluaran = "SELECT SUM(total) AS total_saldo_pengeluaran FROM tb_pengeluaran";
+        $result_total_saldo = mysqli_query($conn, $query_total_pengeluaran);
+        $row_total_pengeluaran = mysqli_fetch_assoc($result_total_saldo);
         ?>
-            <div class="pemasukanKeluaran">
-                <div class="cardPemasukan">
-                    <div class="titleCardPemasukan">
-                        <img src="./src/image/Arrow 1.png" alt="">
-                        <p>Pemasukan</p>
-                    </div>
-                    <div class="jmlhPemasukan">
-                        <h2>IDR <?= number_format($total) ?></h2>
-                    </div>
-                    <div class="createSaldoATM">
-                    </div>
+
+
+        <div class="pemasukanKeluaran">
+            <div class="cardPemasukan">
+                <div class="titleCardPemasukan">
+                    <img src="./src/image/Arrow 1.png" alt="">
+                    <p>Pemasukan</p>
                 </div>
-                <div class="cardPemasukan">
-                    <div class="titleCardPemasukan">
-                        <img src="./src/image/Arrow 2.png" alt="">
-                        <p>Pengeluaran</p>
-                    </div>
-                    <div class="jmlhPemasukan">
-                        <h2>IDR 200.000</h2>
-                    </div>
-                    <div class="createSaldoATM">
-                    </div>
+                <div class="jmlhPemasukan">
+                    <h2>IDR <?= number_format($row_total_saldo['total_saldo']) ?></h2>
                 </div>
             </div>
+            <div class="cardPemasukan">
+                <div class="titleCardPemasukan">
+                    <img src="./src/image/Arrow 2.png" alt="">
+                    <p>Pengeluaran</p>
+                </div>
+                <div class="jmlhPemasukan">
+                    <h2>IDR <?= number_format($row_total_pengeluaran['total_saldo_pengeluaran']) ?></h2>
+                </div>
+            </div>
+        </div>
 
+        <?php
+        // manampilkan seluruh data pemasukan
+        while ($data = mysqli_fetch_assoc($hasil)) {
+        ?>
             <div class="container">
                 <div class="transaksiTerbaru transaksi">
                     <div class="contenTransaksiTerbaru">

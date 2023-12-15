@@ -12,6 +12,11 @@
 </head>
 
 <body>
+  <style>
+    main {
+      margin-bottom: 100px;
+    }
+  </style>
   <header>
     <div class="profile">
       <div class="pic">
@@ -28,13 +33,13 @@
     include "koneksi.php";
     // Mengambil saldo dompet pada field dana dengan menggunakan id
     $query_dompet = mysqli_query($conn, "SELECT * FROM tb_dana where id_dana='3'");
+    $dompet = mysqli_fetch_assoc($query_dompet);
 
     // Mengambil saldo dompet pada field dana dengan menggunakan id
     $query_bank = mysqli_query($conn, "SELECT *  FROM tb_dana where id_dana='2'");
-
-    $dompet = mysqli_fetch_assoc($query_dompet);
     $bank = mysqli_fetch_assoc($query_bank);
 
+    // melakuakn inner join untuk menampilkan di transaksi terbaru
     ?>
 
     <div class="pemasukanKeluaran">
