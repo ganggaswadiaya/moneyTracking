@@ -73,26 +73,48 @@
         <a href="riwayat_pengeluaran.php">Lihat</a>
       </div>
 
-      <?php
+    <?php
 
-      include 'koneksi.php';
+    include 'koneksi.php';
 
-      $query_join = mysqli_query($conn, "SELECT category FROM tb_dana INNER JOIN tb_pemasukan USING(id_dana)");
-      $cek = mysqli_fetch_assoc($query_join);
+    $hasil = array();
 
-      // mengambil data pemasukan
-      $query_pemasukan = 'SELECT * FROM tb_pemasukan';
-      $data_pemasukan = mysqli_fetch_assoc(mysqli_query($conn, $query_pemasukan));
+    // query data pemasukan dan lakukan join ke table dana untuk mendapatkan category
+    $query_pemasukan = mysqli_query($conn, 'SELECT * FROM tb_pemasukan INNER JOIN tb_dana ON tb_pemasukan.id_dana=tb_dana.id_dana');
+    // ambil data pemasukan dan tambahkan ke array hasil
+    while($data_pemasukan = mysqli_fetch_assoc($query_pemasukan)) {
+        $hasil[] = $data_pemasukan;
+    }
 
-      // mengambil data pengeluaran
-      $query_pengeluaran = 'SELECT * FROM tb_pengeluaran';
-      $data_pengeluaran = mysqli_fetch_assoc(mysqli_query($conn, $query_pengeluaran));
+    // query data pengeluaran dan lakukan join ke table dana untuk mendapatkan category
+    $query_pengeluaran = mysqli_query($conn, 'SELECT * FROM tb_pengeluaran INNER JOIN tb_dana ON tb_pengeluaran.id_dana=tb_dana.id_dana');
+    // ambil data pengeluaran dan tambahkan ke array hasil
+    while($data_pengeluaran = mysqli_fetch_assoc($query_pengeluaran)) {
+        $hasil[] = $data_pengeluaran;
+    }
 
-      // menggabungkan dua tabel menggunaka array
-      $hasil = array_merge($data_pemasukan, $data_pengeluaran);
-      for ($i = 0; $i < count($hasil); $i++) {
-      ?>
+    // Mengurutkan array menggunakan fungsi kostum -> sort_by_date
+    // referensi: https://www.w3schools.com/php/func_array_uasort.asp
+    usort($hasil, "sort_by_date");
 
+    function sort_by_date($a, $b)
+    {
+        // mengubah tanggal menjadi detik
+        // referensi: https://www.w3schools.com/php/func_date_strtotime.asp
+        $timeA = strtotime($a['tanggal']);
+        $timeB = strtotime($b['tanggal']);
+
+        if($timeA == $timeB) {
+            return 0;
+        } // 0 menandakan bahwa tidak ada perubahan dalam urutan array
+        return $timeA < $timeB ? 1 : -1;
+        // -1 menandakan bahwa posisi a akan ditempatkan sebelum b
+        // 1 menandakan bahwa posisi a akan ditempatkan setelah b
+        // Referensi: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+    }
+
+    for ($i = 0; $i < count($hasil); $i++) {
+        ?>
         <div class="contenTransaksiTerbaru">
           <div class="cardTransaksiTerbaru">
             <div class="titleCardTransaksi">
@@ -100,19 +122,27 @@
                 <img src="./src/image/shopping.png" alt="food icon" />
               </div>
               <div class="titleTransaksi">
-                <h3><?= $hasil['sumber'] ?></h3>
-                <p><?= $cek['category'] ?></p>
+                <?php if(isset($hasil[$i]['sumber'])) : ?>
+                  <h3><?= $hasil[$i]['sumber'] ?></h3>
+                  <?php else: ?>
+                    <h3><?= $hasil[$i]['untuk'] ?></h3>
+                  <?php endif; ?>
+                <p><?= $hasil[$i]['category'] ?></p>
               </div>
             </div>
             <div class="hargaBrng">
-              <h3>- <?= number_format($hasil['penghasilan']) ?></h3>
-              <p><?= $hasil['tanggal'] ?></p>
+              <?php if(isset($hasil[$i]['penghasilan'])) : ?>
+                <h3 style="color:green">+ <?= number_format($hasil[$i]['penghasilan']) ?></h3>
+                <?php else: ?>
+                  <h3 style="color:red">- <?= number_format($hasil[$i]['harga']) ?></h3>
+                <?php endif; ?>
+              <p><?= $hasil[$i]['tanggal'] ?></p>
             </div>
           </div>
         </div>
       <?php
-      }
-      ?>
+    }
+    ?>
     </div>
   </main>
 
