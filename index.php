@@ -77,17 +77,20 @@
 
       include 'koneksi.php';
 
+      $query_join = mysqli_query($conn, "SELECT category FROM tb_dana INNER JOIN tb_pemasukan USING(id_dana)");
+      $cek = mysqli_fetch_assoc($query_join);
+
       // mengambil data pemasukan
       $query_pemasukan = 'SELECT * FROM tb_pemasukan';
-      $hasil_pemasukan = mysqli_query($conn, $query_pemasukan);
+      $data_pemasukan = mysqli_fetch_assoc(mysqli_query($conn, $query_pemasukan));
 
       // mengambil data pengeluaran
       $query_pengeluaran = 'SELECT * FROM tb_pengeluaran';
-      $hasil_pengeluaran = mysqli_query($conn, $query_pengeluaran);
+      $data_pengeluaran = mysqli_fetch_assoc(mysqli_query($conn, $query_pengeluaran));
 
       // menggabungkan dua tabel menggunaka array
-      $hasil = array_merge($hasil_pemasukan, $hasil_pengeluaran);
-      while ($data = mysqli_fetch_assoc($hasil)) {
+      $hasil = array_merge($data_pemasukan, $data_pengeluaran);
+      for ($i = 0; $i < count($hasil); $i++) {
       ?>
 
         <div class="contenTransaksiTerbaru">
@@ -97,17 +100,16 @@
                 <img src="./src/image/shopping.png" alt="food icon" />
               </div>
               <div class="titleTransaksi">
-                <h3><?= $data['sumber'] ?></h3>
+                <h3><?= $hasil['sumber'] ?></h3>
                 <p><?= $cek['category'] ?></p>
               </div>
             </div>
             <div class="hargaBrng">
-              <h3>- + <?= number_format($data['penghasilan']) ?></h3>
-              <p><?= $data['tanggal'] ?></p>
+              <h3>- <?= number_format($hasil['penghasilan']) ?></h3>
+              <p><?= $hasil['tanggal'] ?></p>
             </div>
           </div>
         </div>
-
       <?php
       }
       ?>
