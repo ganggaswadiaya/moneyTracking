@@ -72,54 +72,45 @@
         <h1>Transaksi Terbaru</h1>
         <a href="riwayat_pengeluaran.php">Lihat</a>
       </div>
-      <div class="contenTransaksiTerbaru">
-        <div class="cardTransaksiTerbaru">
-          <div class="titleCardTransaksi">
-            <div class="transaksiIcon">
-              <img src="./src/image/shopping.png" alt="food icon" />
+
+      <?php
+
+      include 'koneksi.php';
+
+      // mengambil data pemasukan
+      $query_pemasukan = 'SELECT * FROM tb_pemasukan';
+      $hasil_pemasukan = mysqli_query($conn, $query_pemasukan);
+
+      // mengambil data pengeluaran
+      $query_pengeluaran = 'SELECT * FROM tb_pengeluaran';
+      $hasil_pengeluaran = mysqli_query($conn, $query_pengeluaran);
+
+      // menggabungkan dua tabel menggunaka array
+      $hasil = array_merge($hasil_pemasukan, $hasil_pengeluaran);
+      while ($data = mysqli_fetch_assoc($hasil)) {
+      ?>
+
+        <div class="contenTransaksiTerbaru">
+          <div class="cardTransaksiTerbaru">
+            <div class="titleCardTransaksi">
+              <div class="transaksiIcon">
+                <img src="./src/image/shopping.png" alt="food icon" />
+              </div>
+              <div class="titleTransaksi">
+                <h3><?= $data['sumber'] ?></h3>
+                <p><?= $cek['category'] ?></p>
+              </div>
             </div>
-            <div class="titleTransaksi">
-              <h3>Nasi Goreng</h3>
-              <p>Makanan</p>
+            <div class="hargaBrng">
+              <h3>- + <?= number_format($data['penghasilan']) ?></h3>
+              <p><?= $data['tanggal'] ?></p>
             </div>
-          </div>
-          <div class="hargaBrng">
-            <h3>- 50.000</h3>
-            <p>Hari ini</p>
           </div>
         </div>
 
-        <div class="cardTransaksiTerbaru">
-          <div class="titleCardTransaksi">
-            <div class="transaksiIcon">
-              <img src="./src/image/sallary.png" alt="food icon" />
-            </div>
-            <div class="titleTransaksi">
-              <h3>Nasi Goreng</h3>
-              <p>Makanan</p>
-            </div>
-          </div>
-          <div class="hargaBrng">
-            <h3>- 50.000</h3>
-            <p>Hari ini</p>
-          </div>
-        </div>
-        <div class="cardTransaksiTerbaru">
-          <div class="titleCardTransaksi">
-            <div class="transaksiIcon">
-              <img src="./src/image/foodLogo.png" alt="food icon" />
-            </div>
-            <div class="titleTransaksi">
-              <h3>Nasi Goreng</h3>
-              <p>Makanan</p>
-            </div>
-          </div>
-          <div class="hargaBrng">
-            <h3>- 50.000</h3>
-            <p>Hari ini</p>
-          </div>
-        </div>
-      </div>
+      <?php
+      }
+      ?>
     </div>
   </main>
 

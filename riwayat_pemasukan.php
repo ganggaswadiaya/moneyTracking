@@ -30,30 +30,53 @@
     </header>
 
     <main>
-
+        <form method="post" style="color: #fff; position: relative; margin-top: -130px; margin-bottom: 30px; padding: 30px;">
+            <table cellpadding="7">
+                <tr>
+                    <td>Dari</td>
+                    <td><input type="date" name="dari_tgl" required style="border: 0; background: transparent; color: #fff;"></td>
+                </tr>
+                <tr>
+                    <td>Sampai</td>
+                    <td><input type="date" name="sampai_tgl" required style="border: 0; background: transparent; color: #fff;"></td>
+                    <td><input type="submit" name="filter" value="Cari" style="border: 0; background-color: white; padding: 3px 5px; border-radius: 10px;"></td>
+                </tr>
+            </table>
+        </form>
         <?php
 
         include 'koneksi.php';
 
-        // mengurutkan pemasukan sesuai dengan data terbaru
-        $query = 'SELECT * FROM tb_pemasukan ORDER BY id_pemasukan DESC';
-        $hasil = mysqli_query($conn, $query);
+        // memfilter bulan pemasukan dan pengeluaran
+        if (isset($_POST['filter'])) {
+            $dari_tgl = mysqli_real_escape_string($conn, $_POST['dari_tgl']);
+            $sampai_tgl = mysqli_real_escape_string($conn, $_POST['sampai_tgl']);
+            // memfilter pemasukan
+            $query_total_saldo = "SELECT SUM(penghasilan) AS total_saldo FROM tb_pemasukan WHERE tanggal BETWEEN '$dari_tgl' AND '$sampai_tgl'";
+            $result_total_saldo = mysqli_query($conn, $query_total_saldo);
+            $row_total_saldo = mysqli_fetch_assoc($result_total_saldo);
+
+            // memfilter pengeluaran
+            $query_total_pengeluaran = "SELECT SUM(total) AS total_saldo_pengeluaran FROM tb_pengeluaran WHERE tanggal BETWEEN '$dari_tgl' AND '$sampai_tgl'";
+            $result_total_saldo = mysqli_query($conn, $query_total_pengeluaran);
+            $row_total_pengeluaran = mysqli_fetch_assoc($result_total_saldo);
+        } else {
+
+            // mengambil total pemasukan untuk di tampilkan
+            $query_total_saldo = "SELECT SUM(penghasilan) AS total_saldo FROM tb_pemasukan";
+            $result_total_saldo = mysqli_query($conn, $query_total_saldo);
+            $row_total_saldo = mysqli_fetch_assoc($result_total_saldo);
+
+            // mengambil total pengeluaran untuk di tampilkan
+            $query_total_pengeluaran = "SELECT SUM(total) AS total_saldo_pengeluaran FROM tb_pengeluaran";
+            $result_total_saldo = mysqli_query($conn, $query_total_pengeluaran);
+            $row_total_pengeluaran = mysqli_fetch_assoc($result_total_saldo);
+        }
 
         // mengambil data kategori pada tabel dana
         $query_join = mysqli_query($conn, "SELECT category FROM tb_dana INNER JOIN tb_pemasukan USING(id_dana)");
         $cek = mysqli_fetch_assoc($query_join);
-
-        // menjumlahkan semua pemasukan menjadi saldo
-        $query_total_saldo = "SELECT SUM(penghasilan) AS total_saldo FROM tb_pemasukan";
-        $result_total_saldo = mysqli_query($conn, $query_total_saldo);
-        $row_total_saldo = mysqli_fetch_assoc($result_total_saldo);
-
-        // mengambil total pengeluaran untuk di tampilkan
-        $query_total_pengeluaran = "SELECT SUM(total) AS total_saldo_pengeluaran FROM tb_pengeluaran";
-        $result_total_saldo = mysqli_query($conn, $query_total_pengeluaran);
-        $row_total_pengeluaran = mysqli_fetch_assoc($result_total_saldo);
         ?>
-
 
         <div class="pemasukanKeluaran">
             <div class="cardPemasukan">
@@ -77,7 +100,17 @@
         </div>
 
         <?php
-        // manampilkan seluruh data pemasukan
+        if (isset($_POST['filter'])) {
+            $dari_tgl = mysqli_real_escape_string($conn, $_POST['dari_tgl']);
+            $sampai_tgl = mysqli_real_escape_string($conn, $_POST['sampai_tgl']);
+            $query = "SELECT * FROM tb_pemasukan WHERE tanggal BETWEEN '$dari_tgl' AND '$sampai_tgl'";
+            $hasil = mysqli_query($conn, $query);
+        } else {
+            // manampilkan seluruh data pemasukan
+            $query = 'SELECT * FROM tb_pemasukan';
+            $hasil = mysqli_query($conn, $query);
+        }
+
         while ($data = mysqli_fetch_assoc($hasil)) {
         ?>
             <div class="container">
